@@ -69,6 +69,7 @@ fun BoardCell(
         modifier = modifier
             .fillMaxSize()
             .padding(4.dp)
+            .aspectRatio(1f)
             .clickable(onClick = onClick)
             .background(androidx.compose.ui.graphics.Color.DarkGray)
             ,
