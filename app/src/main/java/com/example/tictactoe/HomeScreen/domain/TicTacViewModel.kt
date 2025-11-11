@@ -5,6 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 sealed class Player(val symbol : String) {
     object x : Player("X")
@@ -25,11 +28,10 @@ data class TTTState(
 )
 
 class TicTacViewModel:ViewModel(){
-    var UiState by mutableStateOf(TTTState())
-        private set
+
+    private val _uiState = MutableStateFlow(TTTState())
+    val uiStatus : StateFlow<TTTState> = _uiState.asStateFlow()
 
 
-    fun onEvent(){
 
-    }
 }

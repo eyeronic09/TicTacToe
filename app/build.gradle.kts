@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.ui.graphics)
     val lifecycle_version = "2.9.4"
 
 
