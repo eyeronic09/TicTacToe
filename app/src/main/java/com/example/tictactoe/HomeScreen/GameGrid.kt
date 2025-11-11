@@ -20,10 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tictactoe.HomeScreen.domain.Player
 
 @Composable
 fun BoardGrid(
@@ -48,9 +50,13 @@ fun BoardGrid(
             items(9) { index ->
                 customButton(
                     onClick = { onCellClicked(index) },
+                    onEnable = {
+                        val value = board.getOrNull(index)
+                        value != "X" && value != "O"
+                    },
                     content = {
                         Text(
-                            text = board.getOrElse(index) { "_" },
+                            text = board.getOrElse(index) { " " },
                             modifier = Modifier.fillMaxSize(),
                             textAlign = TextAlign.Center
                         )
@@ -64,13 +70,17 @@ fun BoardGrid(
 @Composable
 fun customButton(
     onClick: () -> Unit,
+    onEnable:() -> Boolean ,
     content: @Composable () -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .aspectRatio(1f)
-            .clickable(onClick = onClick)
+            .clickable(
+                enabled = onEnable(),
+                onClick = onClick,
+            )
             .background(Color.LightGray.copy(alpha = 0.3f))
             .border(1.dp, Color.DarkGray, shape = RectangleShape)
             .padding(4.dp),
