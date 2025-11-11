@@ -1,13 +1,11 @@
 package com.example.tictactoe.HomeScreen.domain
 
-import android.R
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+
 
 sealed class Player(val symbol : String) {
     object x : Player("X")
@@ -31,7 +29,26 @@ class TicTacViewModel:ViewModel(){
 
     private val _uiState = MutableStateFlow(TTTState())
     val uiStatus : StateFlow<TTTState> = _uiState.asStateFlow()
+    fun onMoves(index : Int) {
+        val ticTacToeState = _uiState.value
+        if (ticTacToeState.gameStatus == GameStatus.IsRunning ) {
+            val newBoard = ticTacToeState.board.toMutableList().apply {
+                set(
+                    index, when (ticTacToeState.currentPlayer) {
+                        is Player.x -> Player.x.symbol
+                        is Player.o -> Player.o.symbol
+                        Player.emp -> Player.emp.symbol
+                    }
+                )
+            }
+            _uiState.update { state ->
+                state.copy(
+                    board = newBoard,
+                    currentPlayer = if (state.currentPlayer == Player.x) Player.o else Player.x
+                )
+            }
 
-
+        }
+    }
 
 }

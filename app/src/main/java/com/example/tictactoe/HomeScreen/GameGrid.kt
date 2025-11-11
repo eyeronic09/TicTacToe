@@ -23,10 +23,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 @Composable
 fun BoardGrid(
     board: List<String>,
-    onCellClicked: (Index: Int) -> Unit
+    onCellClicked: (index: Int) -> Unit
 ) {
     val gridState = rememberLazyGridState()
 
