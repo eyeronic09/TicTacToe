@@ -1,33 +1,35 @@
 package com.example.tictactoe.HomeScreen.domain
 
+import android.R
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
-data class TicTacToeState(
-    // 3x3 game board, null means empty, 'X' or 'O' for moves
-    val board: List<List<Player?>> = List(3) { List(3) { null } },
-    val currentPlayer: Player = Player.X,  // X starts first
-    val gameStatus: GameStatus = GameStatus.Playing,
-    val winningCombination: List<Pair<Int, Int>>? = null
-) {
-    // Player can be either X or O
-    enum class Player {
-        X, O
-    }
-
-    // Possible game statuses
-    enum class GameStatus {
-        Playing,  // Game is in progress
-        Draw,     // Game ended in a draw
-        Won       // Game was won by a player
-    }
+sealed class Player(val symbol : String) {
+    object x : Player("X")
+    object o : Player("O")
+    object emp : Player("_")
 }
-class TicTacViewModel : ViewModel() {
-    private val _state = MutableStateFlow<TicTacToeState>(TicTacToeState())
-    val state : StateFlow<TicTacToeState> = _state.asStateFlow()
+sealed class GameStatus {
+    object IsRunning : GameStatus()
+    object XWins : GameStatus()
+    object OWins : GameStatus()
+    object Draw : GameStatus()
+}
+
+data class TTTState(
+    val board : List<String> = List(9) { index -> " " },
+    val currentPlayer: Player = Player.x ,
+    val gameStatus : GameStatus = GameStatus.IsRunning
+)
+
+class TicTacViewModel:ViewModel(){
+    var UiState by mutableStateOf(TTTState())
+        private set
 
 
+    fun onEvent(){
 
+    }
 }
