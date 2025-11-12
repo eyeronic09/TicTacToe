@@ -22,8 +22,8 @@ fun HomeScreen( viewModel: TicTacViewModel = viewModel() ) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         BoardGrid(
-            uiState.board ,
-            onCellClicked = {index ->  viewModel.onMoves(index) }
-            )
+            uiState.board,
+            onCellClicked = {index -> viewModel.onMoves(index)}
+        )
     }
 }
