@@ -23,7 +23,8 @@ fun HomeScreen( viewModel: TicTacViewModel = viewModel() ) {
     ) {
         BoardGrid(
             uiState.board,
-            onCellClicked = {index -> viewModel.onMoves(index)}
+            onCellClicked = { index -> viewModel.onMoves(index) },
+            indexToColor = uiState.patternNumber?: emptyList()
         )
     }
 }
