@@ -29,7 +29,8 @@ data class TTTState(
     val board: List<String> = List(9) { " " },
     val currentPlayer: Player = Player.x,
     val gameStatus: GameStatus = GameStatus.IsRunning,
-    val patternNumber: List<Int>? = null
+
+    val patternNumber: List<Int>? = null,
 )
 
 class TicTacViewModel : ViewModel() {
@@ -70,11 +71,9 @@ class TicTacViewModel : ViewModel() {
                     currentPlayer = if (state.currentPlayer == Player.x) Player.o else Player.x,
                     gameStatus = gameStatus,
                     patternNumber = winnerInfo.patternNumber
-                )
-
+                ).apply { Log.d("gameStatus" , gameStatus.toString()) }
             }
         }
-
     }
 }
 
