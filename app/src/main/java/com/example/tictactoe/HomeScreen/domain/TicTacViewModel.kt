@@ -29,14 +29,27 @@ data class TTTState(
     val board: List<String> = List(9) { " " },
     val currentPlayer: Player = Player.x,
     val gameStatus: GameStatus = GameStatus.IsRunning,
-
     val patternNumber: List<Int>? = null,
+    val gameResult: String = ""
 )
 
 class TicTacViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(TTTState())
     val uiStatus: StateFlow<TTTState> = _uiState.asStateFlow()
+
+
+    fun result() {
+        _uiState.update { currentState ->
+            when (currentState.gameStatus) {
+                GameStatus.Draw -> currentState.copy(gameResult = "Draw")
+                GameStatus.OWins -> currentState.copy(gameResult = "O winner")
+                GameStatus.XWins -> currentState.copy(gameResult = "X winner")
+                else -> currentState
+            }
+        }
+    }
+
 
     fun onMoves(index: Int) {
         val ticTacToeState = _uiState.value
@@ -52,6 +65,7 @@ class TicTacViewModel : ViewModel() {
                 )
             }
             val winnerInfo = checkWinner(newBoard)
+
             /**
              * Calculates the current game status based on the winner of the move.
              *
@@ -71,43 +85,46 @@ class TicTacViewModel : ViewModel() {
                     currentPlayer = if (state.currentPlayer == Player.x) Player.o else Player.x,
                     gameStatus = gameStatus,
                     patternNumber = winnerInfo.patternNumber
-                ).apply { Log.d("gameStatus" , gameStatus.toString()) }
+                ).apply { Log.d("gameStatus", gameStatus.toString()) }
             }
+            result()
         }
     }
 }
 
+fun checkWinner(board: List<String?>): TTTState {
+    val winPatterns = listOf(
+        // Rows
+        listOf(0, 1, 2),
+        listOf(3, 4, 5),
+        listOf(6, 7, 8),
+        // Columns
+        listOf(0, 3, 6),
+        listOf(1, 4, 7),
+        listOf(2, 5, 8),
+        // Diagonals
+        listOf(0, 4, 8),
+        listOf(2, 4, 6)
+    )
 
-    fun checkWinner(board: List<String?>): TTTState {
-        val winPatterns = listOf(
-            // Rows
-            listOf(0, 1, 2),
-            listOf(3, 4, 5),
-            listOf(6, 7, 8),
-            // Columns
-            listOf(0, 3, 6),
-            listOf(1, 4, 7),
-            listOf(2, 5, 8),
-            // Diagonals
-            listOf(0, 4, 8),
-            listOf(2, 4, 6)
-        )
-        
-        for (pattern in winPatterns) {
-            val (a, b, c) = pattern
-            // If all three positions match the same symbol
-            if (board[a] != " " && board[a] == board[b] && board[a] == board[c]) {
-                val status = when (board[a]) {
-                    Player.x.symbol -> GameStatus.XWins
-                    Player.o.symbol -> GameStatus.OWins
-                    else -> GameStatus.IsRunning
-                }
-                return TTTState(gameStatus = status, patternNumber = pattern).also { it ->
-                    Log.d("it" , it.patternNumber.toString())
-                }
+    for (pattern in winPatterns) {
+        val (a, b, c) = pattern
+        // If all three positions match the same symbol
+        if (board[a] != " " && board[a] == board[b] && board[a] == board[c]) {
+            val status = when (board[a]) {
+                Player.x.symbol -> GameStatus.XWins
+                Player.o.symbol -> GameStatus.OWins
+                else -> GameStatus.IsRunning
+            }
+            return TTTState(gameStatus = status, patternNumber = pattern).also { it ->
+                Log.d("it", it.patternNumber.toString())
+
             }
         }
-        return TTTState()
     }
+    return TTTState()
+
+
+}
 
 
