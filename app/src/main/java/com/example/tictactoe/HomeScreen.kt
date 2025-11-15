@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tictactoe.HomeScreen.Component.AlertBox
 import com.example.tictactoe.HomeScreen.Component.TurnInfo
 import com.example.tictactoe.HomeScreen.Component.BoardGrid
 import com.example.tictactoe.HomeScreen.domain.GameStatus
@@ -38,7 +40,12 @@ fun HomeScreen(viewModel: TicTacViewModel = viewModel()) {
     val uiState by viewModel.uiStatus.collectAsStateWithLifecycle()
     Box(
         modifier = Modifier.fillMaxSize()
+
     ) {
+        val openDialog = remember { mutableStateOf(false) }
+        LaunchedEffect(uiState.gameStatus) {
+            openDialog.value = uiState.gameStatus != GameStatus.IsRunning
+        }
         Image(
             painter = painterResource(id = R.drawable.blue),
             contentDescription = "Background",
@@ -52,14 +59,7 @@ fun HomeScreen(viewModel: TicTacViewModel = viewModel()) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (uiState.gameResult.isNotEmpty()) {
-                Text(
-                    text = "Winner: ${uiState.gameResult}",
-                    color = Color.White,
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-            }
+
             TurnInfo(uiState.currentPlayer.symbol)
             Spacer(modifier = Modifier.height(16.dp))
             BoardGrid(
@@ -67,6 +67,14 @@ fun HomeScreen(viewModel: TicTacViewModel = viewModel()) {
                 onCellClicked = { viewModel.onMoves(it) },
                 indexToColor = uiState.patternNumber ?: emptyList(),
             )
+        }
+        if (openDialog.value){
+            AlertBox(
+                uiState.gameStatus,
+                onDismiss = {
+                    viewModel.resetGame()
+                    openDialog.value = false
+                })
         }
     }
 }

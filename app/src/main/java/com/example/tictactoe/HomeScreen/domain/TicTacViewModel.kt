@@ -1,6 +1,7 @@
 package com.example.tictactoe.HomeScreen.domain
 
 import android.graphics.Insets.add
+import android.support.v4.os.IResultReceiver
 import android.util.Log
 import androidx.compose.ui.res.integerResource
 import androidx.lifecycle.ViewModel
@@ -37,7 +38,17 @@ class TicTacViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(TTTState())
     val uiStatus: StateFlow<TTTState> = _uiState.asStateFlow()
 
-
+    fun resetGame() {
+        _uiState.update {
+            it.copy(
+                board = List(9) { " " },
+                currentPlayer = Player.x,
+                gameStatus = GameStatus.IsRunning,
+                patternNumber = null,
+                gameResult = ""
+            )
+        }
+    }
     fun result() {
         _uiState.update { currentState ->
             when (currentState.gameStatus) {
