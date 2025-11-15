@@ -17,12 +17,11 @@ sealed class Player(val symbol: String) {
 
 }
 
-sealed class GameStatus {
-    object IsRunning : GameStatus()
-
-    object XWins : GameStatus()
-    object OWins : GameStatus()
-    object Draw : GameStatus()
+sealed interface GameStatus {
+    data object IsRunning : GameStatus
+    data object XWins : GameStatus
+    data object OWins : GameStatus
+    data object Draw : GameStatus
 }
 
 data class TTTState(
