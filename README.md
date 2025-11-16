@@ -33,9 +33,8 @@ A modern implementation of the classic Tic Tac Toe game for Android, built with 
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/yourusername/TicTacToe.git](https://github.com/yourusername/TicTacToe.git)
-
-
+   git clone https://github.com/eyeronic09/TicTacToe
+   
 How to Play
 Two players take turns marking a space in a 3×3 grid
 The first player uses 'X' and the second player uses 'O'
